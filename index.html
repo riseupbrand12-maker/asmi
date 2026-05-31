@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ASMI THARIPPADI | പ്രവേശനോത്സവം 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Anek Malayalam', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 30%, #1a2a2f, #0b1a1f);
+            min-height: 100vh;
+            padding: 40px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Glassmorphic card with rich festival vibe */
+        .poster-card {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(15, 25, 30, 0.68);
+            backdrop-filter: blur(14px);
+            border-radius: 64px;
+            box-shadow: 0 30px 55px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 120, 0.25);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 200, 100, 0.4);
+        }
+
+        /* New header design - warm metallic gold */
+        .hero-header {
+            text-align: center;
+            padding: 32px 24px 28px;
+            background: linear-gradient(135deg, #1e2e28, #1f2c22);
+            border-bottom: 2px solid #f5b642;
+            position: relative;
+        }
+        .hero-header::after {
+            content: "✨";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            background: #1f2c22;
+            padding: 0 12px;
+            color: #ffcd7e;
+        }
+        .hero-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #f7e05e, #ffb347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .hero-header p {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffde9c;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* two column layout with new spacing */
+        .flex-studio {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* controls area - translucent dark card */
+        .controls-area {
+            flex: 1.1;
+            min-width: 290px;
+            background: rgba(25, 35, 32, 0.75);
+            backdrop-filter: blur(4px);
+            padding: 36px 28px;
+            border-right: 1px solid rgba(245, 182, 66, 0.35);
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .preview-area {
+            flex: 1.2;
+            background: rgba(20, 30, 28, 0.55);
+            backdrop-filter: blur(4px);
+            padding: 35px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .input-block {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .input-block label {
+            font-weight: 800;
+            color: #ffdd99;
+            font-size: 1.1rem;
+            letter-spacing: -0.2px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+        }
+        input {
+            width: 100%;
+            padding: 15px 22px;
+            border-radius: 80px;
+            border: 1.5px solid #ffcd7e;
+            background: rgba(255, 250, 235, 0.95);
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+            transition: 0.25s;
+            color: #1f2e24;
+        }
+        input:focus {
+            border-color: #f7bc45;
+            box-shadow: 0 0 0 4px rgba(247, 188, 69, 0.4);
+            background: white;
+        }
+
+        .upload-section {
+            transition: all 0.2s ease;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 48px;
+            padding: 20px 18px;
+            border: 1px dashed #ffbe5e;
+        }
+        .file-label {
+            background: linear-gradient(95deg, #d8a33a, #c9892e);
+            padding: 14px 18px;
+            border-radius: 60px;
+            text-align: center;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: 0.2s;
+            border: none;
+            color: white;
+            text-shadow: 0 1px 2px black;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .file-label:hover {
+            background: linear-gradient(95deg, #f0b347, #e09d2c);
+            transform: scale(1.02);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+        }
+        #photoInput {
+            display: none;
+        }
+
+        /* MODAL - crop tool (consistent) */
+        .crop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.25s ease;
+        }
+        .crop-modal.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #1e2823;
+            border-radius: 48px;
+            width: 90%;
+            max-width: 750px;
+            padding: 20px 20px 28px;
+            box-shadow: 0 30px 45px rgba(0, 0, 0, 0.6);
+            border: 1px solid #ffce7a;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0 8px 12px 16px;
+            border-bottom: 2px solid #ffbc54;
+        }
+        .modal-header h3 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #ffd966, #ffa82b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .modal-close {
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: #ffbf69;
+            transition: 0.2s;
+        }
+        .modal-close:hover {
+            color: #ff8c42;
+            transform: scale(1.1);
+        }
+        .crop-container {
+            margin: 20px 0;
+            background: #30281e;
+            border-radius: 32px;
+            overflow: hidden;
+            max-height: 55vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .crop-container img {
+            max-width: 100%;
+            display: block;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 18px;
+        }
+        .btn-crop-save {
+            background: #f7b32b;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #1e2a24;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .btn-crop-save:hover {
+            background: #ffc247;
+            transform: translateY(-2px);
+        }
+        .btn-cancel-crop {
+            background: #5c4b32;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            color: #fbeccd;
+            cursor: pointer;
+        }
+
+        .canvas-wrapper {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 36px;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 120, 0.5);
+            padding: 14px;
+            max-width: 580px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 28px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #ccb28b;
+        }
+        .download-btn {
+            background: linear-gradient(105deg, #2b7a4b, #1d5e3a);
+            border: none;
+            padding: 16px 36px;
+            border-radius: 80px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 12px 22px rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+        }
+        .download-btn:hover {
+            background: linear-gradient(105deg, #3c9c62, #267c48);
+            transform: scale(1.02);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
+        }
+        .footer-credit {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffdd99;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 10px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+        .hidden {
+            display: none;
+        }
+        .info-note {
+            font-size: 0.7rem;
+            color: #ffcc88;
+            text-shadow: 0 1px 1px black;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @media (max-width: 780px) {
+            .controls-area {
+                border-right: none;
+                border-bottom: 1px solid rgba(245, 182, 66, 0.5);
+            }
+            .hero-header h1 {
+                font-size: 1.5rem;
+            }
+            .modal-box {
+                width: 95%;
+                padding: 16px;
+            }
+            .modal-header h3 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="poster-card">
+    <div class="hero-header">
+        <h1>INSPIRE</h1>
+        <h2>ASMI PRE SCHOOL</h2>
+        <p>പ്രവേശനോത്സവം 2026</p>
+    </div>
+
+    <div class="flex-studio">
+        <div class="controls-area">
+            <div class="input-block">
+                <label>📝 നിങ്ങളുടെ പേര്</label>
+                <input type="text" id="studentName" placeholder="ഉദാ: ഫാത്തിമ കെ / FATHIMA K" autocomplete="off">
+                <div class="info-note">* പേര് നൽകിയ ശേഷം ഫോട്ടോ അപ്ലോഡ് ചെയ്യാം</div>
+            </div>
+
+            <div id="photoUploadWrapper" class="upload-section hidden">
+                <div class="input-block">
+                    <label>📸 ഫോട്ടോ അപ്ലോഡ്</label>
+                    <div class="file-label" id="triggerFileSelect">
+                        🖼️ ഫോട്ടോ തിരഞ്ഞെടുക്കുക
+                    </div>
+                    <input type="file" id="photoInput" accept="image/jpeg, image/png, image/jpg">
+                </div>
+                <div style="font-size:0.7rem; color:#ffd48a; margin-top:8px; text-align:center;">
+                    ✨ ക്രോപ്പ് ചെയ്ത് സേവ് ചെയ്യുക
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-area">
+            <div class="canvas-wrapper">
+                <canvas id="posterCanvas" style="width:100%; height:auto; max-width:530px; border-radius: 24px;"></canvas>
+            </div>
+            <button id="downloadPosterBtn" class="download-btn">⬇️ പോസ്റ്റർ ഡൗൺലോഡ്</button>
+            <div class="footer-credit">SUHAIL KERALA | RiseUp Brand | 7034678818</div>
+        </div>
+    </div>
+</div>
+
+<!-- CROP MODAL (unchanged but theme friendly) -->
+<div id="cropModal" class="crop-modal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>✂️ ഫോട്ടോ ക്രോപ്പ് ചെയ്യുക</h3>
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="crop-container" id="cropImageContainer">
+            <img id="modalCropImage" style="max-width:100%; display:block;">
+        </div>
+        <div class="modal-buttons">
+            <button id="modalCancelBtn" class="btn-cancel-crop">❌ റദ്ദാക്കുക</button>
+            <button id="modalCropSaveBtn" class="btn-crop-save">✔️ ക്രോപ്പ് & സേവ്</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- MAX RESOLUTION CONFIG (ultra HD poster) ----------
+        const BASE_WIDTH = 1200;
+        const BASE_HEIGHT = 1500;
+        const RESOLUTION_MULTIPLIER = 2.5;   // 3000x3750 px
+        const CANVAS_WIDTH = Math.floor(BASE_WIDTH * RESOLUTION_MULTIPLIER);
+        const CANVAS_HEIGHT = Math.floor(BASE_HEIGHT * RESOLUTION_MULTIPLIER);
+        
+        const nameInput = document.getElementById('studentName');
+        const photoUploadWrapper = document.getElementById('photoUploadWrapper');
+        const photoFileInput = document.getElementById('photoInput');
+        const triggerFileSelect = document.getElementById('triggerFileSelect');
+        const cropModal = document.getElementById('cropModal');
+        const modalCropImg = document.getElementById('modalCropImage');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+        const modalCropSaveBtn = document.getElementById('modalCropSaveBtn');
+        const posterCanvas = document.getElementById('posterCanvas');
+        const downloadBtn = document.getElementById('downloadPosterBtn');
+        
+        let ctx = posterCanvas.getContext('2d');
+        let cropperInstance = null;
+        let currentCroppedImage = null;
+        let backgroundImage = new Image();
+        let bgReady = false;
+        
+        posterCanvas.width = CANVAS_WIDTH;
+        posterCanvas.height = CANVAS_HEIGHT;
+        
+        const BG_IMAGE_URL = 'https://i.postimg.cc/tRs1gw1M/EDAPPATTA1.jpg'; // original poster background (festive)
+        
+        function roundedRect(ctx, x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+        
+        // ----- DRAW POSTER (white name, lowered photo and name, no duplicate) -----
+        function drawFullPoster() {
+            if (!ctx) return;
+            const w = posterCanvas.width;
+            const h = posterCanvas.height;
+            const factor = w / BASE_WIDTH;  // 2.5
+            
+            // LOWER OFFSET: moved photo & name further down (+90 base)
+            const LOWER_OFFSET_BASE = 90;
+            const photoSize = 420 * factor;
+            const rightMargin = 80 * factor;
+            const photoX = w - photoSize - rightMargin;
+            const photoY = (470 + LOWER_OFFSET_BASE) * factor;   // lowered as requested
+            const nameGapBelowPhoto = 70 * factor;
+            const nameBaseY = photoY + photoSize + nameGapBelowPhoto;
+            const radius = 44 * factor;
+            const borderWidthMain = 4 * factor;
+            const borderWidthInner = 2.5 * factor;
+            const centerPhotoX = photoX + photoSize / 2;
+            
+            // background (school template)
+            if (bgReady && backgroundImage.complete && backgroundImage.naturalWidth > 0) {
+                ctx.drawImage(backgroundImage, 0, 0, w, h);
+            } else {
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                grad.addColorStop(0, '#2c4b32');
+                grad.addColorStop(1, '#ab7a3a');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+            }
+            
+            // PHOTO + FRAME
+            if (currentCroppedImage && currentCroppedImage.complete && currentCroppedImage.naturalWidth) {
+                ctx.save();
+                ctx.beginPath();
+                roundedRect(ctx, photoX, photoY, photoSize, photoSize, radius);
+                ctx.clip();
+                ctx.drawImage(currentCroppedImage, photoX, photoY, photoSize, photoSize);
+                ctx.restore();
+                
+                ctx.beginPath();
+                roundedRect(ctx, photoX, photoY, photoSize, photoSize, radius);
+                ctx.lineWidth = borderWidthMain;
+                ctx.strokeStyle = "#FFD966";
+                ctx.stroke();
+                ctx.beginPath();
+                roundedRect(ctx, photoX + borderWidthMain/2, photoY + borderWidthMain/2, photoSize - borderWidthMain, photoSize - borderWidthMain, radius - borderWidthMain/2);
+                ctx.lineWidth = borderWidthInner;
+                ctx.strokeStyle = "#FFF1BF";
+                ctx.stroke();
+            } else {
+                // placeholder
+                ctx.fillStyle = "rgba(235, 215, 175, 0.9)";
+                ctx.beginPath();
+                roundedRect(ctx, photoX, photoY, photoSize, photoSize, radius);
+                ctx.fill();
+                ctx.fillStyle = "#ad7a3c";
+                const emojiFontSize = 68 * factor;
+                ctx.font = `${emojiFontSize}px 'Anek Malayalam', 'Segoe UI Emoji'`;
+                ctx.textAlign = "center";
+                ctx.fillText("📷", centerPhotoX, photoY + photoSize/2 + (12 * factor));
+                ctx.textAlign = "left";
+                ctx.beginPath();
+                roundedRect(ctx, photoX, photoY, photoSize, photoSize, radius);
+                ctx.strokeStyle = "#e9bd73";
+                ctx.lineWidth = borderWidthMain;
+                ctx.stroke();
+            }
+            
+            // NAME: WHITE COLOR, single rendering, no duplicate (bug fixed)
+            let studentName = nameInput.value.trim();
+            if (studentName === "") studentName = "________";
+            let maxNameWidth = photoSize + (70 * factor);
+            let fontSize = 54 * factor;
+            ctx.font = `bold ${fontSize}px 'Anek Malayalam'`;
+            let textWidth = ctx.measureText(studentName).width;
+            while (textWidth > maxNameWidth && fontSize > (28 * factor)) {
+                fontSize -= (4 * factor);
+                ctx.font = `bold ${fontSize}px 'Anek Malayalam'`;
+                textWidth = ctx.measureText(studentName).width;
+            }
+            
+            // ONLY ONE FILL operation -> no duplicate
+            ctx.save();
+            ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
+            ctx.shadowBlur = 10 * factor;
+            ctx.shadowOffsetX = 3 * factor;
+            ctx.shadowOffsetY = 3 * factor;
+            ctx.fillStyle = "#FFFFFF";     // pure white name
+            ctx.textAlign = "center";
+            ctx.font = `bold ${fontSize}px 'Anek Malayalam'`;
+            ctx.fillText(studentName, centerPhotoX, nameBaseY);
+            ctx.restore();
+        }
+        
+        function setCroppedImageFromCanvas(canvasElement) {
+            const img = new Image();
+            img.onload = () => {
+                currentCroppedImage = img;
+                drawFullPoster();
+            };
+            img.src = canvasElement.toDataURL('image/png');
+        }
+        
+        function closeCropModal(resetFileInput = true) {
+            if (cropperInstance) {
+                cropperInstance.destroy();
+                cropperInstance = null;
+            }
+            cropModal.classList.remove('active');
+            if (resetFileInput) photoFileInput.value = '';
+            modalCropImg.src = '';
+        }
+        
+        function openCropModalWithFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                modalCropImg.src = e.target.result;
+                cropModal.classList.add('active');
+                modalCropImg.onload = () => {
+                    if (cropperInstance) cropperInstance.destroy();
+                    cropperInstance = new Cropper(modalCropImg, {
+                        aspectRatio: 1,
+                        viewMode: 2,
+                        dragMode: 'move',
+                        autoCropArea: 0.9,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        zoomable: true,
+                        background: true,
+                        responsive: true,
+                        center: true,
+                    });
+                };
+                if (modalCropImg.complete) modalCropImg.onload();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function onPhotoSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                alert("ദയവായി ഒരു ചിത്രം തിരഞ്ഞെടുക്കുക (JPEG/PNG)");
+                photoFileInput.value = '';
+                return;
+            }
+            openCropModalWithFile(file);
+        }
+        
+        function saveCroppedImage() {
+            if (!cropperInstance) {
+                alert("ക്രോപ്പ് ടൂൾ പ്രവർത്തന സജ്ജമല്ല, വീണ്ടും ശ്രമിക്കുക");
+                closeCropModal(true);
+                return;
+            }
+            const croppedCanvas = cropperInstance.getCroppedCanvas({ width: 2500, height: 2500 });
+            if (!croppedCanvas) {
+                alert("ക്രോപ്പ് ചെയ്യുന്നതിൽ പിശക്");
+                return;
+            }
+            setCroppedImageFromCanvas(croppedCanvas);
+            closeCropModal(true);
+        }
+        
+        function cancelCropping() { closeCropModal(true); }
+        
+        function toggleUploadSection() {
+            const nameValue = nameInput.value.trim();
+            if (nameValue.length > 0) photoUploadWrapper.classList.remove('hidden');
+            else photoUploadWrapper.classList.add('hidden');
+            drawFullPoster();
+        }
+        
+        function onNameChange() {
+            toggleUploadSection();
+            drawFullPoster();
+        }
+        
+        function initBackground() {
+            backgroundImage.crossOrigin = "Anonymous";
+            backgroundImage.onload = () => { bgReady = true; drawFullPoster(); };
+            backgroundImage.onerror = () => { bgReady = true; drawFullPoster(); };
+            backgroundImage.src = BG_IMAGE_URL;
+        }
+        
+        function downloadPosterAsJPG() {
+            const nameForFile = (nameInput.value.trim() || "CKHM_poster").replace(/[^a-zA-Z0-9\u0D00-\u0D7F]/g, '_');
+            const filename = `CKHM_Festival_${nameForFile}.jpg`;
+            posterCanvas.toBlob((blob) => {
+                if (blob) {
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                } else {
+                    alert("JPG ജനറേഷൻ പരാജയപ്പെട്ടു");
+                }
+            }, 'image/jpeg', 0.98);
+        }
+        
+        // Events
+        nameInput.addEventListener('input', onNameChange);
+        nameInput.addEventListener('blur', () => drawFullPoster());
+        triggerFileSelect.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (nameInput.value.trim().length === 0) {
+                alert("ദയവായി ആദ്യം നിങ്ങളുടെ പേര് രേഖപ്പെടുത്തുക");
+                return;
+            }
+            photoFileInput.click();
+        });
+        photoFileInput.addEventListener('change', onPhotoSelected);
+        modalCropSaveBtn.addEventListener('click', saveCroppedImage);
+        modalCancelBtn.addEventListener('click', cancelCropping);
+        closeModalBtn.addEventListener('click', cancelCropping);
+        cropModal.addEventListener('click', (e) => { if (e.target === cropModal) cancelCropping(); });
+        downloadBtn.addEventListener('click', downloadPosterAsJPG);
+        
+        initBackground();
+        toggleUploadSection();
+        drawFullPoster();
+        window.addEventListener('resize', () => drawFullPoster());
+        console.log("NEW THEME: Glassmorphic dark festival style | White name, lowered position, single name render");
+    })();
+</script>
+</body>
+</html>
