@@ -655,8 +655,8 @@
         }
         
         function downloadPosterAsJPG() {
-            const nameForFile = (nameInput.value.trim() || "CKHM_poster").replace(/[^a-zA-Z0-9\u0D00-\u0D7F]/g, '_');
-            const filename = `CKHM_${nameForFile}.jpg`;
+            const nameForFile = (nameInput.value.trim() || "inspire_poster").replace(/[^a-zA-Z0-9\u0D00-\u0D7F]/g, '_');
+            const filename = `inspire_${nameForFile}.jpg`;
             posterCanvas.toBlob((blob) => {
                 if (blob) {
                     const link = document.createElement('a');
